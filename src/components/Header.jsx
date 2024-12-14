@@ -17,7 +17,7 @@ function useUserSession(initialUser) {
 	useEffect(() => {
 		if ("serviceWorker" in navigator) {
 			const serializedFirebaseConfig = encodeURIComponent(JSON.stringify(firebaseConfig));
-			const serviceWorkerPath = `/auth-service-workers.js?firebaseConfig=${serializedFirebaseConfig}`;
+			const serviceWorkerPath = `/auth-service-worker.js?firebaseConfig=${serializedFirebaseConfig}`;
 
 			navigator.serviceWorker.register(serviceWorkerPath).then((registration) => console.log("scope is:", registration.scope));
 		}
