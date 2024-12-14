@@ -1,9 +1,9 @@
 env:
   # Get these values from the Firebase console
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: apiKey
+    secret: apiKey
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-    value: authDomain
+    secret: authDomain
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
     secret: projectId
   - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
