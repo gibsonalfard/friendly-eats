@@ -11,12 +11,45 @@ import { useRouter } from "next/navigation";
 import { firebaseConfig } from "@/src/lib/firebase/config";
 
 function useUserSession(initialUser) {
-	return;
+	const [user, setUser] = useState(initialUser);
+	const router = useRouter();
+
+	useEffect(() => {
+		if ("serviceWorker" in navigator) {
+			const serializedFirebaseConfig = encodeURIComponent(JSON.stringify(firebaseConfig));
+			const serviceWorkerPath = `/auth-service-workers.js?firebaseConfig=${serializedFirebaseConfig}`;
+
+			navigator.serviceWorker.register(serviceWorkerPath).then((registration) => console.log("scope is:", registration.scope));
+		}
+	}, []);
+
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged((authUser) => {
+			setUser(authUser)
+		})
+
+		return () => unsubscribe()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		onAuthStateChanged((authUser) => {
+			if (user === undefined) return
+
+			// refresh when user changed to ease testing
+			if (user?.email !== authUser?.email) {
+				router.refresh()
+			}
+		})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user])
+
+	return user;
 }
 
-export default function Header({initialUser}) {
+export default function Header({ initialUser }) {
 
-	const user = useUserSession(initialUser) ;
+	const user = useUserSession(initialUser);
 
 	const handleSignOut = event => {
 		event.preventDefault();
